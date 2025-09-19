@@ -39,8 +39,6 @@ namespace DataStructures
                 if (current.Data.Equals(person))
                 {
                     return true;
-
-
                 }
                 current = current.Next;
             }
