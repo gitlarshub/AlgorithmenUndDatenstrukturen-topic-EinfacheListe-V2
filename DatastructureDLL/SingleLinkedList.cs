@@ -1,48 +1,51 @@
-﻿using System;
-using System.Xml.Linq;
-using CommonDLL;
+﻿using CommonDLL;
 
-namespace DataStructures
+public class Node<T>
 {
-    public class SingleLinkedList
+    public T Data { get; set; }
+    public Node<T> Next { get; set; }
+    public Node(T data)
     {
-        private Node head;
+        Data = data;
+        Next = null;
+    }
+}
 
-        public SingleLinkedList()
+public class SingleLinkedList<T>
+{
+    private Node<T> head;
+    public SingleLinkedList()
+    {
+        head = null;
+    }
+    public void Add(T data)
+    {
+        Node<T> newNode = new Node<T>(data);
+        if (head == null)
         {
-            head = null;
+            head = newNode;
         }
-
-        public void Add(Person person)
+        else
         {
-            Node newNode = new Node(person);
-            if (head == null)
+            Node<T> current = head;
+            while (current.Next != null)
             {
-                head = newNode;
-            }
-            else
-            {
-                Node current = head;
-                while (current.Next != null)
-                {
-                    current = current.Next;
-                }
-                current.Next = newNode;
-            }
-        }
-
-        public bool Contains(Person person)
-        {
-            Node current = head;
-            while (current != null)
-            {
-                if (current.Data.Equals(person))
-                {
-                    return true;
-                }
                 current = current.Next;
             }
-            return false;
+            current.Next = newNode;
         }
+    }
+    public bool Contains(T data)
+    {
+        Node<T> current = head;
+        while (current != null)
+        {
+            if (current.Data.Equals(data))
+            {
+                return true;
+            }
+            current = current.Next;
+        }
+        return false;
     }
 }

@@ -1,14 +1,11 @@
-﻿namespace CommonDLL
+﻿public class Node<T>
 {
-    public class Node
-    {
-        public Person Data { get; set; }
-        public Node Next { get; set; }
+    public T Data { get; set; }
+    public Node<T> Next { get; set; }
 
-        public Node(Person data)
-        {
-            Data = data;
-            Next = null;
-        }
+    public Node(T data)
+    {
+        Data = data;
+        Next = null;
     }
 }
