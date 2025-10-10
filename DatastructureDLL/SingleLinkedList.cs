@@ -46,7 +46,7 @@ public class SingleLinkedList<T>
                 return true;
             }
             current = current.Next;
-        }
+        }y
         return false;
     }
 
