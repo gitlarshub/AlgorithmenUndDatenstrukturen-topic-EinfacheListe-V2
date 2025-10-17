@@ -95,5 +95,6 @@ namespace DataStructureTests
             Assert.AreEqual(1, list.PosOfElement(person3), "person3 soll an Position 1 sein.");
             Assert.AreEqual(2, list.PosOfElement(person2), "person2 soll an Position 2 sein.");
         }
+
     }
 }

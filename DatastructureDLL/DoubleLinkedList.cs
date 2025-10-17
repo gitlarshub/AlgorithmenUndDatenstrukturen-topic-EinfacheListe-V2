@@ -1,21 +1,7 @@
-﻿public class DoubleNode<T>
+﻿public class DoubleLinkedList<T>
 {
-    public T Data { get; set; }
-    public DoubleNode<T> Next { get; set; }
-    public DoubleNode<T> Previous { get; set; }
-
-    public DoubleNode(T data)
-    {
-        Data = data;
-        Next = null;
-        Previous = null;
-    }
-}
-
-public class DoubleLinkedList<T>
-{
-    private DoubleNode<T> head;
-    private DoubleNode<T> tail;
+    private Node<T> head;
+    private Node<T> tail;
 
     public DoubleLinkedList()
     {
@@ -25,7 +11,7 @@ public class DoubleLinkedList<T>
 
     public void Add(T data)
     {
-        DoubleNode<T> newNode = new DoubleNode<T>(data);
+        Node<T> newNode = new Node<T>(data);
         if (head == null)
         {
             head = newNode;
@@ -41,7 +27,7 @@ public class DoubleLinkedList<T>
 
     public bool Contains(T data)
     {
-        DoubleNode<T> current = head;
+        Node<T> current = head;
         while (current != null)
         {
             if (current.Data.Equals(data))
@@ -55,8 +41,8 @@ public class DoubleLinkedList<T>
 
     public void InsertBefore(T elementAfter, T elementToInsert)
     {
-        DoubleNode<T> newNode = new DoubleNode<T>(elementToInsert);
-        DoubleNode<T> current = head;
+        Node<T> newNode = new Node<T>(elementToInsert);
+        Node<T> current = head;
 
         while (current != null)
         {
@@ -82,8 +68,8 @@ public class DoubleLinkedList<T>
 
     public void InsertAfter(T elementBefore, T elementToInsert)
     {
-        DoubleNode<T> newNode = new DoubleNode<T>(elementToInsert);
-        DoubleNode<T> current = head;
+        Node<T> newNode = new Node<T>(elementToInsert);
+        Node<T> current = head;
 
         while (current != null)
         {
@@ -109,7 +95,7 @@ public class DoubleLinkedList<T>
 
     public int PosOfElement(T element)
     {
-        DoubleNode<T> current = head;
+        Node<T> current = head;
         int position = 0;
         while (current != null)
         {
