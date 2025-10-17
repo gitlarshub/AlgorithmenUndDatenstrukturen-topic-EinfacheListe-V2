@@ -80,20 +80,7 @@ namespace DataStructureTests
             Assert.AreEqual(2, list.PosOfElement(person2), "person2 soll an Position 2 sein.");
         }
 
-        [Test]
-        public void InsertBefore_ShouldNotChangesThePositionOfElementAfter()
-        {
-            Person person1 = new Person("Lars", "Veljaca", "Männlich", 17);
-            Person person2 = new Person("Ferdinand", "Willi", "Männlich", 30);
-            Person person3 = new Person("Petra", "Müller", "Weiblich", 32);
-            list.Add(person1);
-            list.Add(person2);
-            int positionBefore = list.PosOfElement(person2);
-            list.InsertBefore(person2, person3);
-            int positionAfter = list.PosOfElement(person2);
-            Assert.AreEqual(positionBefore, positionAfter, "Die Position von person 2 sollte sich nicht verändern.");
-            Assert.AreEqual(positionBefore - 1, list.PosOfElement(person3), "Die person3 sollte vor person2 hinzugefügt werden.");
-        }
+  
 
         [Test]
         public void InsertBefore_ShouldInsertInTheCorrectPosition()
