@@ -1,29 +1,30 @@
-﻿using CommonDLL;
-
-public class SingleLinkedList<T>
+﻿public class DoubleLinkedList<T>
 {
     private Node<T> head;
-    public SingleLinkedList()
+    private Node<T> tail;
+
+    public DoubleLinkedList()
     {
         head = null;
+        tail = null;
     }
+
     public void Add(T data)
     {
         Node<T> newNode = new Node<T>(data);
         if (head == null)
         {
             head = newNode;
+            tail = newNode;
         }
         else
         {
-            Node<T> current = head;
-            while (current.Next != null)
-            {
-                current = current.Next;
-            }
-            current.Next = newNode;
+            tail.Next = newNode;
+            newNode.Previous = tail;
+            tail = newNode;
         }
     }
+
     public bool Contains(T data)
     {
         Node<T> current = head;
@@ -41,33 +42,50 @@ public class SingleLinkedList<T>
     public void InsertBefore(T elementAfter, T elementToInsert)
     {
         Node<T> newNode = new Node<T>(elementToInsert);
-        if (head != null && head.Data.Equals(elementAfter))
-        {
-            newNode.Next = head;
-            head = newNode;
-            return;
-        }
         Node<T> current = head;
-        while (current != null && current.Next != null)
+
+        while (current != null)
         {
-            if (current.Next.Data.Equals(elementAfter))
+            if (current.Data.Equals(elementAfter))
             {
-                newNode.Next = current.Next;
-                current.Next = newNode;
+                newNode.Next = current;
+                newNode.Previous = current.Previous;
+
+                if (current.Previous != null)
+                {
+                    current.Previous.Next = newNode;
+                }
+                else
+                {
+                    head = newNode;
+                }
+                current.Previous = newNode;
                 return;
             }
             current = current.Next;
         }
     }
+
     public void InsertAfter(T elementBefore, T elementToInsert)
     {
         Node<T> newNode = new Node<T>(elementToInsert);
         Node<T> current = head;
+
         while (current != null)
         {
             if (current.Data.Equals(elementBefore))
             {
                 newNode.Next = current.Next;
+                newNode.Previous = current;
+
+                if (current.Next != null)
+                {
+                    current.Next.Previous = newNode;
+                }
+                else
+                {
+                    tail = newNode;
+                }
                 current.Next = newNode;
                 return;
             }
