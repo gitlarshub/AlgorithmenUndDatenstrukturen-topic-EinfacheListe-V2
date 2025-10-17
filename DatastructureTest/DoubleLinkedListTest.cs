@@ -3,7 +3,7 @@ using CommonDLL;
 
 namespace DataStructureTests
 {
-    public class Tests
+    public class DoubleLinkedTests
     {
         private DoubleLinkedList<Person> list;
 
@@ -90,4 +90,23 @@ namespace DataStructureTests
             list.Add(person2);
             int positionBefore = list.PosOfElement(person2);
             list.InsertBefore(person2, person3);
-            int positionAfter = list.PosOf
+            int positionAfter = list.PosOfElement(person2);
+            Assert.AreEqual(positionBefore, positionAfter, "Die Position von person 2 sollte sich nicht verändern.");
+            Assert.AreEqual(positionBefore - 1, list.PosOfElement(person3), "Die person3 sollte vor person2 hinzugefügt werden.");
+        }
+
+        [Test]
+        public void InsertBefore_ShouldInsertInTheCorrectPosition()
+        {
+            Person person1 = new Person("Lars", "Veljaca", "Männlich", 17);
+            Person person2 = new Person("Ferdinand", "Willi", "Männlich", 30);
+            Person person3 = new Person("Petra", "Müller", "Weiblich", 32);
+            list.Add(person1);
+            list.Add(person2);
+            list.InsertBefore(person2, person3);
+            Assert.AreEqual(0, list.PosOfElement(person1), "person1 soll an Position 0 sein.");
+            Assert.AreEqual(1, list.PosOfElement(person3), "person3 soll an Position 1 sein.");
+            Assert.AreEqual(2, list.PosOfElement(person2), "person2 soll an Position 2 sein.");
+        }
+    }
+}
