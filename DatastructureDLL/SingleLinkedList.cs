@@ -1,5 +1,4 @@
 ﻿using CommonDLL;
-using System.Security.Cryptography.X509Certificates;
 
 public class Node<T>
 {
@@ -46,7 +45,7 @@ public class SingleLinkedList<T>
                 return true;
             }
             current = current.Next;
-        }y
+        }
         return false;
     }
 
