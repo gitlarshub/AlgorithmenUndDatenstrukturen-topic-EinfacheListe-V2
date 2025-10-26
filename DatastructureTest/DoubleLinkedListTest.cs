@@ -1,16 +1,36 @@
 ﻿using NUnit.Framework;
 using CommonDLL;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace DataStructureTests
 {
     public class DoubleLinkedTests
     {
         private DoubleLinkedList<Person> list;
+        private Person person1;
+        private Person person2;
+        private Person person3;
 
         [SetUp]
         public void Setup()
         {
             list = new DoubleLinkedList<Person>();
+            person1 = new Person("Lars", "Veljaca", "Männlich", 17);
+            person2 = new Person("Ferdinand", "Willi", "Männlich", 30);
+            person3 = new Person("Petra", "Müller", "Weiblich", 32);
+        }
+
+        private Person[] ToArray(DoubleLinkedList<Person> dll)
+        {
+            var result = new List<Person>();
+            var current = typeof(DoubleLinkedList<Person>).GetField("head", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(dll);
+            while (current != null)
+            {
+                result.Add((Person)current.GetType().GetProperty("Data").GetValue(current));
+                current = current.GetType().GetProperty("Next").GetValue(current);
+            }
+            return result.ToArray();
         }
 
         [Test]
@@ -40,9 +60,6 @@ namespace DataStructureTests
         [Test]
         public void AddMultiplePersons_ShouldContainAll()
         {
-            Person person1 = new Person("Lars", "Veljaca", "Männlich", 17);
-            Person person2 = new Person("Ferdinand", "Willi", "Männlich", 30);
-            Person person3 = new Person("Petra", "Müller", "Weiblich", 32);
             list.Add(person1);
             list.Add(person2);
             list.Add(person3);
@@ -54,9 +71,6 @@ namespace DataStructureTests
         [Test]
         public void InsertAfter_ShouldNotChangesThePositionOfElementBefore()
         {
-            Person person1 = new Person("Lars", "Veljaca", "Männlich", 17);
-            Person person2 = new Person("Ferdinand", "Willi", "Männlich", 30);
-            Person person3 = new Person("Petra", "Müller", "Weiblich", 32);
             list.Add(person1);
             list.Add(person2);
             int positionBefore = list.PosOfElement(person1);
@@ -69,9 +83,6 @@ namespace DataStructureTests
         [Test]
         public void InsertAfter_ShouldInsertInTheCorrectPosition()
         {
-            Person person1 = new Person("Lars", "Veljaca", "Männlich", 17);
-            Person person2 = new Person("Ferdinand", "Willi", "Männlich", 30);
-            Person person3 = new Person("Petra", "Müller", "Weiblich", 32);
             list.Add(person1);
             list.Add(person2);
             list.InsertAfter(person1, person3);
@@ -80,14 +91,9 @@ namespace DataStructureTests
             Assert.AreEqual(2, list.PosOfElement(person2), "person2 soll an Position 2 sein.");
         }
 
-  
-
         [Test]
         public void InsertBefore_ShouldInsertInTheCorrectPosition()
         {
-            Person person1 = new Person("Lars", "Veljaca", "Männlich", 17);
-            Person person2 = new Person("Ferdinand", "Willi", "Männlich", 30);
-            Person person3 = new Person("Petra", "Müller", "Weiblich", 32);
             list.Add(person1);
             list.Add(person2);
             list.InsertBefore(person2, person3);
@@ -96,5 +102,81 @@ namespace DataStructureTests
             Assert.AreEqual(2, list.PosOfElement(person2), "person2 soll an Position 2 sein.");
         }
 
+        [Test]
+        public void BubbleSort_EmptyList_DoesNothing()
+        {
+            list.BubbleSort();
+            var result = ToArray(list);
+            Assert.AreEqual(0, result.Length, "Eine leere Liste sollte nach dem Sortieren leer bleiben.");
+        }
+
+        [Test]
+        public void BubbleSort_SingleElement_RemainsUnchanged()
+        {
+            list.Add(person1);
+            list.BubbleSort();
+            var result = ToArray(list);
+            Assert.AreEqual(1, result.Length, "Die Liste sollte genau ein Element enthalten.");
+            Assert.AreEqual(person1, result[0], "Das einzige Element sollte unverändert bleiben.");
+        }
+
+        [Test]
+        public void BubbleSort_MultipleElements_SortsByAgeThenLastName()
+        {
+            list.Add(person2); 
+            list.Add(person3); 
+            list.Add(person1);  
+            list.BubbleSort();
+            var result = ToArray(list);
+            Assert.AreEqual(3, result.Length, "Die Liste sollte drei Elemente enthalten.");
+            Assert.AreEqual(person1, result[0], "Person1 (Alter 17) sollte an erster Stelle sein.");
+            Assert.AreEqual(person2, result[1], "Person2 (Alter 30) sollte an zweiter Stelle sein.");
+            Assert.AreEqual(person3, result[2], "Person3 (Alter 32) sollte an dritter Stelle sein.");
+        }
+
+        [Test]
+        public void BubbleSort_AlreadySortedList_RemainsSorted()
+        {
+            list.Add(person1); 
+            list.Add(person2);
+            list.Add(person3);
+            list.BubbleSort();
+            var result = ToArray(list);
+            Assert.AreEqual(3, result.Length, "Die Liste sollte drei Elemente enthalten.");
+            Assert.AreEqual(person1, result[0], "Person1 (Alter 17) sollte an erster Stelle sein.");
+            Assert.AreEqual(person2, result[1], "Person2 (Alter 30) sollte an zweiter Stelle sein.");
+            Assert.AreEqual(person3, result[2], "Person3 (Alter 32) sollte an dritter Stelle sein.");
+        }
+
+        [Test]
+        public void BubbleSort_ReverseOrderList_SortsCorrectly()
+        {
+            list.Add(person3); 
+            list.Add(person2);
+            list.Add(person1); 
+            list.BubbleSort();
+            var result = ToArray(list);
+            Assert.AreEqual(3, result.Length, "Die Liste sollte drei Elemente enthalten.");
+            Assert.AreEqual(person1, result[0], "Person1 (Alter 17) sollte an erster Stelle sein.");
+            Assert.AreEqual(person2, result[1], "Person2 (Alter 30) sollte an zweiter Stelle sein.");
+            Assert.AreEqual(person3, result[2], "Person3 (Alter 32) sollte an dritter Stelle sein.");
+        }
+
+        [Test]
+        public void BubbleSort_DuplicateAges_SortsByLastName()
+        {
+            var person4 = new Person("Anna", "Adler", "Weiblich", 30); 
+            list.Add(person2); 
+            list.Add(person3); 
+            list.Add(person4); 
+            list.Add(person1); 
+            list.BubbleSort();
+            var result = ToArray(list);
+            Assert.AreEqual(4, result.Length, "Die Liste sollte vier Elemente enthalten.");
+            Assert.AreEqual(person1, result[0], "Person1 (Alter 17) sollte an erster Stelle sein.");
+            Assert.AreEqual(person4, result[1], "Person4 (Alter 30, Adler) sollte an zweiter Stelle sein.");
+            Assert.AreEqual(person2, result[2], "Person2 (Alter 30, Willi) sollte an dritter Stelle sein.");
+            Assert.AreEqual(person3, result[3], "Person3 (Alter 32) sollte an vierter Stelle sein.");
+        }
     }
 }

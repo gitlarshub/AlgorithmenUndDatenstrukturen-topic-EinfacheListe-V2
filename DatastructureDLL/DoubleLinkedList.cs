@@ -1,4 +1,6 @@
-﻿public class DoubleLinkedList<T>
+﻿using System;
+
+public class DoubleLinkedList<T> where T : IComparable<T>
 {
     private Node<T> head;
     private Node<T> tail;
@@ -43,14 +45,12 @@
     {
         Node<T> newNode = new Node<T>(elementToInsert);
         Node<T> current = head;
-
         while (current != null)
         {
             if (current.Data.Equals(elementAfter))
             {
                 newNode.Next = current;
                 newNode.Previous = current.Previous;
-
                 if (current.Previous != null)
                 {
                     current.Previous.Next = newNode;
@@ -70,14 +70,12 @@
     {
         Node<T> newNode = new Node<T>(elementToInsert);
         Node<T> current = head;
-
         while (current != null)
         {
             if (current.Data.Equals(elementBefore))
             {
                 newNode.Next = current.Next;
                 newNode.Previous = current;
-
                 if (current.Next != null)
                 {
                     current.Next.Previous = newNode;
@@ -107,5 +105,29 @@
             position++;
         }
         return -1;
+    }
+
+    public void BubbleSort()
+    {
+        if (head == null || head.Next == null)
+            return;
+
+        bool swapped;
+        do
+        {
+            swapped = false;
+            Node<T> current = head;
+            while (current.Next != null)
+            {
+                if (current.Data.CompareTo(current.Next.Data) > 0)
+                {
+                    T temp = current.Data;
+                    current.Data = current.Next.Data;
+                    current.Next.Data = temp;
+                    swapped = true;
+                }
+                current = current.Next;
+            }
+        } while (swapped);
     }
 }
