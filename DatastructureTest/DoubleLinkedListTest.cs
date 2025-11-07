@@ -105,7 +105,7 @@ namespace DataStructureTests
         [Test]
         public void BubbleSort_EmptyList_DoesNothing()
         {
-            list.BubbleSort();
+            list.Sort();
             var result = ToArray(list);
             Assert.AreEqual(0, result.Length, "Eine leere Liste sollte nach dem Sortieren leer bleiben.");
         }
@@ -114,7 +114,7 @@ namespace DataStructureTests
         public void BubbleSort_SingleElement_RemainsUnchanged()
         {
             list.Add(person1);
-            list.BubbleSort();
+            list.Sort();
             var result = ToArray(list);
             Assert.AreEqual(1, result.Length, "Die Liste sollte genau ein Element enthalten.");
             Assert.AreEqual(person1, result[0], "Das einzige Element sollte unverändert bleiben.");
@@ -126,7 +126,7 @@ namespace DataStructureTests
             list.Add(person2); 
             list.Add(person3); 
             list.Add(person1);  
-            list.BubbleSort();
+            list.Sort();
             var result = ToArray(list);
             Assert.AreEqual(3, result.Length, "Die Liste sollte drei Elemente enthalten.");
             Assert.AreEqual(person1, result[0], "Person1 (Alter 17) sollte an erster Stelle sein.");
@@ -140,7 +140,7 @@ namespace DataStructureTests
             list.Add(person1); 
             list.Add(person2);
             list.Add(person3);
-            list.BubbleSort();
+            list.Sort();
             var result = ToArray(list);
             Assert.AreEqual(3, result.Length, "Die Liste sollte drei Elemente enthalten.");
             Assert.AreEqual(person1, result[0], "Person1 (Alter 17) sollte an erster Stelle sein.");
@@ -154,7 +154,7 @@ namespace DataStructureTests
             list.Add(person3); 
             list.Add(person2);
             list.Add(person1); 
-            list.BubbleSort();
+            list.Sort();
             var result = ToArray(list);
             Assert.AreEqual(3, result.Length, "Die Liste sollte drei Elemente enthalten.");
             Assert.AreEqual(person1, result[0], "Person1 (Alter 17) sollte an erster Stelle sein.");
@@ -170,7 +170,7 @@ namespace DataStructureTests
             list.Add(person3); 
             list.Add(person4); 
             list.Add(person1); 
-            list.BubbleSort();
+            list.Sort();
             var result = ToArray(list);
             Assert.AreEqual(4, result.Length, "Die Liste sollte vier Elemente enthalten.");
             Assert.AreEqual(person1, result[0], "Person1 (Alter 17) sollte an erster Stelle sein.");

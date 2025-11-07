@@ -1,14 +1,18 @@
-﻿using System;
+﻿using AlgorithmenUndDatenstrukturen;
+using SortingAlgorithms;
+using System;
 
 public class DoubleLinkedList<T> where T : IComparable<T>
 {
     private Node<T> head;
     private Node<T> tail;
+    private ISortAlgorithm<T> sortAlgorithm;
 
     public DoubleLinkedList()
     {
         head = null;
         tail = null;
+        sortAlgorithm = new BubbleSort<T>();
     }
 
     public void Add(T data)
@@ -106,28 +110,8 @@ public class DoubleLinkedList<T> where T : IComparable<T>
         }
         return -1;
     }
-
-    public void BubbleSort()
-    {
-        if (head == null || head.Next == null)
-            return;
-
-        bool swapped;
-        do
-        {
-            swapped = false;
-            Node<T> current = head;
-            while (current.Next != null)
-            {
-                if (current.Data.CompareTo(current.Next.Data) > 0)
-                {
-                    T temp = current.Data;
-                    current.Data = current.Next.Data;
-                    current.Next.Data = temp;
-                    swapped = true;
-                }
-                current = current.Next;
-            }
-        } while (swapped);
+    public void Sort() 
+    { 
+        sortAlgorithm.Sort(head);
     }
 }
