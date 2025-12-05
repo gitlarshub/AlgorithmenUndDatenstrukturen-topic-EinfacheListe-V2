@@ -20,6 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AlgorithmenUndDatenstrukturen\CommonDLL.csproj" />
     <ProjectReference Include="..\DatastructureDLL\DatastructureDLL.csproj" />
+    <ProjectReference Include="..\SortingAlgorithms\SortingAlgorithms.csproj" />
   </ItemGroup>
 
   <ItemGroup>

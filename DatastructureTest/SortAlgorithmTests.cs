@@ -1,157 +1,175 @@
 ﻿using NUnit.Framework;
-using AlgorithmenUndDatenstrukturen;
-using SortingAlgorithms;
 using CommonDLL;
-using System;
-using System.Reflection;
+using SortingAlgorithms;
 using System.Collections.Generic;
+using System.Reflection;
 
-namespace DatastructureTest
+namespace DataStructureTests
 {
     [TestFixture]
-    public class SortAlgorithmTests
+    public class SortingAlgorithmTests
     {
-        private ISortAlgorithm<Person> sorter;
         private DoubleLinkedList<Person> list;
-        private Person person1;
-        private Person person2; 
-        private Person person3; 
-        private Person person4; 
+        private Person p1; 
+        private Person p2;
+        private Person p3;
+        private Person p4;
 
         [SetUp]
         public void Setup()
         {
-            sorter = new BubbleSort<Person>();
             list = new DoubleLinkedList<Person>();
 
-            person1 = new Person("Lars", "Veljaca", "Männlich", 17);
-            person2 = new Person("Ferdinand", "Willi", "Männlich", 30);
-            person3 = new Person("Petra", "Müller", "Weiblich", 32);
-            person4 = new Person("Anna", "Adler", "Weiblich", 30);
+            p1 = new Person("Lars", "Veljaca", "Männlich", 17);
+            p2 = new Person("Ferdinand", "Willi", "Männlich", 30);
+            p3 = new Person("Petra", "Müller", "Weiblich", 32);
+            p4 = new Person("Anna", "Adler", "Weiblich", 30);
         }
 
-        private Node<Person> GetHead()
-        {
-            var headField = typeof(DoubleLinkedList<Person>)
-                .GetField("head", BindingFlags.NonPublic | BindingFlags.Instance);
-            return (Node<Person>)headField.GetValue(list);
-        }
-
-        // Wandelt die Liste in ein Array um
-        private Person[] ToArray()
+        private Person[] ToArray(DoubleLinkedList<Person> dll)
         {
             var result = new List<Person>();
-            var current = GetHead();
+            var current = typeof(DoubleLinkedList<Person>)
+                .GetField("head", BindingFlags.NonPublic | BindingFlags.Instance)
+                .GetValue(dll);
 
             while (current != null)
             {
-                result.Add(current.Data);
-                current = current.Next;
+                var data = current.GetType().GetProperty("Data")!.GetValue(current);
+                result.Add((Person)data!);
+                current = current.GetType().GetProperty("Next")!.GetValue(current);
             }
-
             return result.ToArray();
         }
 
         [Test]
-        public void Sort_EmptyList_DoesNothing()
+        public void BubbleSort_EmptyList_DoesNothing()
         {
-            sorter.Sort(GetHead());
-            var result = ToArray();
-            Assert.AreEqual(0, result.Length, "Leere Liste sollte leer bleiben.");
+            list.Sort();
+            Assert.AreEqual(0, ToArray(list).Length);
         }
 
         [Test]
-        public void Sort_SingleElement_RemainsUnchanged()
+        public void BubbleSort_SingleElement_RemainsUnchanged()
         {
-            list.Add(person1);
-            sorter.Sort(GetHead());
-            var result = ToArray();
-
-            Assert.AreEqual(1, result.Length);
-            Assert.AreEqual(person1, result[0], "Einzelnes Element sollte unverändert sein.");
+            list.Add(p1);
+            list.Sort();
+            var arr = ToArray(list);
+            Assert.AreEqual(1, arr.Length);
+            Assert.AreEqual(p1, arr[0]);
         }
 
         [Test]
-        public void Sort_MultipleElements_SortsByAgeThenLastName()
+        public void BubbleSort_MultipleElements_SortsByAgeThenLastName()
         {
-            list.Add(person3); 
-            list.Add(person1);
-            list.Add(person2);
-
-            sorter.Sort(GetHead());
-            var result = ToArray();
-
-            Assert.AreEqual(3, result.Length);
-            Assert.AreEqual(person1, result[0]);
-            Assert.AreEqual(person2, result[1]);
-            Assert.AreEqual(person3, result[2]);
+            list.Add(p2); list.Add(p3); list.Add(p1);
+            list.Sort();
+            var arr = ToArray(list);
+            Assert.AreEqual(p1, arr[0]);
+            Assert.AreEqual(p2, arr[1]);
+            Assert.AreEqual(p3, arr[2]);
         }
 
         [Test]
-        public void Sort_AlreadySortedList_RemainsCorrect()
+        public void BubbleSort_AlreadySortedList_RemainsSorted()
         {
-            list.Add(person1);
-            list.Add(person2);
-            list.Add(person3);
-
-            sorter.Sort(GetHead());
-            var result = ToArray();
-
-            Assert.AreEqual(person1, result[0]);
-            Assert.AreEqual(person2, result[1]);
-            Assert.AreEqual(person3, result[2]);
+            list.Add(p1); list.Add(p2); list.Add(p3);
+            list.Sort();
+            var arr = ToArray(list);
+            Assert.AreEqual(p1, arr[0]);
+            Assert.AreEqual(p2, arr[1]);
+            Assert.AreEqual(p3, arr[2]);
         }
 
         [Test]
-        public void Sort_ReverseOrder_SortsCorrectly()
+        public void BubbleSort_ReverseOrderList_SortsCorrectly()
         {
-            list.Add(person3);
-            list.Add(person2);
-            list.Add(person1);
-
-            sorter.Sort(GetHead());
-            var result = ToArray();
-
-            Assert.AreEqual(person1, result[0]);
-            Assert.AreEqual(person2, result[1]);
-            Assert.AreEqual(person3, result[2]);
+            list.Add(p3); list.Add(p2); list.Add(p1);
+            list.Sort();
+            var arr = ToArray(list);
+            Assert.AreEqual(p1, arr[0]);
+            Assert.AreEqual(p2, arr[1]);
+            Assert.AreEqual(p3, arr[2]);
         }
 
         [Test]
-        public void Sort_DuplicateAges_SortsByLastName()
+        public void BubbleSort_DuplicateAges_SortsByLastName()
         {
-            list.Add(person3);
-            list.Add(person4);
-            list.Add(person2);
-            list.Add(person1);
-
-            sorter.Sort(GetHead());
-            var result = ToArray();
-
-            Assert.AreEqual(4, result.Length);
-            Assert.AreEqual(person1, result[0]);
-            Assert.AreEqual(person4, result[1]); 
-            Assert.AreEqual(person2, result[2]); 
-            Assert.AreEqual(person3, result[3]); 
+            list.Add(p2); list.Add(p3); list.Add(p4); list.Add(p1);
+            list.Sort();
+            var arr = ToArray(list);
+            Assert.AreEqual(p1, arr[0]);
+            Assert.AreEqual(p4, arr[1]); 
+            Assert.AreEqual(p2, arr[2]); 
+            Assert.AreEqual(p3, arr[3]); 
         }
 
         [Test]
-        public void Sort_WithNullInput_DoesNotThrowException()
+        public void InsertionSort_EmptyList_DoesNothing()
         {
-            Assert.DoesNotThrow(() => sorter.Sort(null), "Sort should handle null input gracefully.");
+            list.sortAlgorithm = new InsertionSort<Person>();
+            list.Sort();
+            Assert.AreEqual(0, ToArray(list).Length);
         }
 
         [Test]
-        public void Sort_TwoElements_SwapsIfNeeded()
+        public void InsertionSort_SingleElement_RemainsUnchanged()
         {
-            list.Add(person2);
-            list.Add(person1); 
+            list.sortAlgorithm = new InsertionSort<Person>();
+            list.Add(p1);
+            list.Sort();
+            var arr = ToArray(list);
+            Assert.AreEqual(1, arr.Length);
+            Assert.AreEqual(p1, arr[0]);
+        }
 
-            sorter.Sort(GetHead());
-            var result = ToArray();
+        [Test]
+        public void InsertionSort_MultipleElements_SortsByAgeThenLastName()
+        {
+            list.sortAlgorithm = new InsertionSort<Person>();
+            list.Add(p2); list.Add(p3); list.Add(p1);
+            list.Sort();
+            var arr = ToArray(list);
+            Assert.AreEqual(p1, arr[0]);
+            Assert.AreEqual(p2, arr[1]);
+            Assert.AreEqual(p3, arr[2]);
+        }
 
-            Assert.AreEqual(person1, result[0]);
-            Assert.AreEqual(person2, result[1]);
+        [Test]
+        public void InsertionSort_AlreadySortedList_RemainsSorted()
+        {
+            list.sortAlgorithm = new InsertionSort<Person>();
+            list.Add(p1); list.Add(p2); list.Add(p3);
+            list.Sort();
+            var arr = ToArray(list);
+            Assert.AreEqual(p1, arr[0]);
+            Assert.AreEqual(p2, arr[1]);
+            Assert.AreEqual(p3, arr[2]);
+        }
+
+        [Test]
+        public void InsertionSort_ReverseOrderList_SortsCorrectly()
+        {
+            list.sortAlgorithm = new InsertionSort<Person>();
+            list.Add(p3); list.Add(p2); list.Add(p1);
+            list.Sort();
+            var arr = ToArray(list);
+            Assert.AreEqual(p1, arr[0]);
+            Assert.AreEqual(p2, arr[1]);
+            Assert.AreEqual(p3, arr[2]);
+        }
+
+        [Test]
+        public void InsertionSort_DuplicateAges_SortsByLastName()
+        {
+            list.sortAlgorithm = new InsertionSort<Person>();
+            list.Add(p2); list.Add(p3); list.Add(p4); list.Add(p1);
+            list.Sort();
+            var arr = ToArray(list);
+            Assert.AreEqual(p1, arr[0]);
+            Assert.AreEqual(p4, arr[1]); 
+            Assert.AreEqual(p2, arr[2]);
+            Assert.AreEqual(p3, arr[3]); 
         }
     }
 }

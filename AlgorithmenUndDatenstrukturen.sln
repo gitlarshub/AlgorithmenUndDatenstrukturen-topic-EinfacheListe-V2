@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonDLL", "AlgorithmenUnd
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatastructureDLL", "DatastructureDLL\DatastructureDLL.csproj", "{1DF85C6D-1CEF-41DA-ABE0-E8CC1205921A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatastructureTest", "DatastructureTest\DatastructureTest.csproj", "{DC5C9881-59DF-4B30-8C00-F17F9E96F71D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatastructureAndSortingTest", "DatastructureTest\DatastructureAndSortingTest.csproj", "{DC5C9881-59DF-4B30-8C00-F17F9E96F71D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SortingAlgorithms", "SortingAlgorithms\SortingAlgorithms.csproj", "{71951487-FC8E-4C2D-AE6E-5288388D3B64}"
 EndProject
