@@ -4,7 +4,7 @@ using System;
 
 namespace SortingAlgorithms
 {
-    public class InsertionSort<T> : ISortAlgorithm<T> where T : IComparable<T>
+    public class InsertionSort<T> : ISortStragegy<T> where T : IComparable<T>
     {
         private void SwapNodes(Node<T> node1, Node<T> node2)
         {
@@ -37,7 +37,7 @@ namespace SortingAlgorithms
             while (unsorted != null)
             {
                 Node<T> j = unsorted;
-                Node<T> prev = GetPrevious(j, head);
+                Node<T> prev = GetPrevious(j, head); // kann man anders machen ohne head
                 while (prev != null && prev.Data.CompareTo(j.Data) > 0)
                 {
                     SwapNodes(prev, j);

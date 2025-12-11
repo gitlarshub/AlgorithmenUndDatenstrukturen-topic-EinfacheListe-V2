@@ -6,7 +6,7 @@ using System;
 public class SingleLinkedList<T> where T : IComparable<T>
 {
     private Node<T> head;
-    private ISortAlgorithm<T> sortAlgorithm;
+    private ISortStragegy<T> sortAlgorithm;
 
     public SingleLinkedList()
     {

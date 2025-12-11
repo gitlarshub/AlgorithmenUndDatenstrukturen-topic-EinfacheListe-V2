@@ -41,7 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ISortAlgorithm.cs" />
+    <Compile Include="ISortableCollection.cs" />
+    <Compile Include="ISortStragegy.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

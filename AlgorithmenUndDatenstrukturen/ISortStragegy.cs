@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AlgorithmenUndDatenstrukturen
 {
-    public interface ISortAlgorithm<T>
+    public interface ISortStragegy<T>
     {
         void Sort(Node<T> head);
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SortingAlgorithms
 {
-    public class BubbleSort<T> : ISortAlgorithm<T> where T : IComparable<T>
+    public class BubbleSort<T> : ISortStragegy<T> where T : IComparable<T>
     {
         public void Sort(Node<T> head)
         {

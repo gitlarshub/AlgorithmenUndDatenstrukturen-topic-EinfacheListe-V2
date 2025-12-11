@@ -6,7 +6,7 @@ public class DoubleLinkedList<T> where T : IComparable<T>
 {
     private Node<T> head;
     private Node<T> tail;
-    public ISortAlgorithm<T> sortAlgorithm;
+    public ISortStragegy<T> sortAlgorithm;
 
     public DoubleLinkedList()
     {
