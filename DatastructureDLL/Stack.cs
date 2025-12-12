@@ -2,19 +2,52 @@
 using SortingAlgorithms;
 using System;
 
-public class SingleLinkedList<T> : ISortableCollection<T> where T : IComparable<T>
+public class Stack<T> : ISortableCollection<T> where T : IComparable<T>
 {
-    private Node<T> head;
+    private Node<T> top;
     private ISortStrategy<T> sortAlgorithm;
-    public SingleLinkedList()
+
+    public Stack()
     {
-        head = null;
+        top = null;
         sortAlgorithm = new BubbleSortStrategy<T>();
     }
+
+    public void Push(T data)
+    {
+        Node<T> newNode = new Node<T>(data);
+        newNode.Next = top;
+        top = newNode;
+    }
+
+    public T Pop()
+    {
+        if (top == null) throw new InvalidOperationException("Stack is empty");
+        T data = top.Data;
+        top = top.Next;
+        return data;
+    }
+
+    public T Peek()
+    {
+        if (top == null) throw new InvalidOperationException("Stack is empty");
+        return top.Data;
+    }
+
+    public bool IsEmpty()
+    {
+        return top == null;
+    }
+
+    public void Sort()
+    {
+        sortAlgorithm.Sort(this);
+    }
+
     public int Count()
     {
         int count = 0;
-        Node<T> current = head;
+        Node<T> current = top;
         while (current != null)
         {
             count++;
@@ -27,8 +60,8 @@ public class SingleLinkedList<T> : ISortableCollection<T> where T : IComparable<
     {
         if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
 
-        Node<T> current = head;
-        for (int i = 0; i <= index; i++)  
+        Node<T> current = top;  
+        for (int i = 0; i <= index; i++) 
         {
             if (current == null)
                 throw new ArgumentOutOfRangeException(nameof(index));
@@ -47,7 +80,7 @@ public class SingleLinkedList<T> : ISortableCollection<T> where T : IComparable<
             index1 = index2;
             index2 = tempIndex;
         }
-        Node<T> node1 = head;
+        Node<T> node1 = top;
         for (int i = 0; i < index1; i++)
         {
             node1 = node1.Next;
@@ -58,12 +91,8 @@ public class SingleLinkedList<T> : ISortableCollection<T> where T : IComparable<
             node2 = node2.Next;
         }
         if (node1 == null || node2 == null) throw new ArgumentOutOfRangeException();
-        T temp = node1.Data;
+        T tempData = node1.Data;
         node1.Data = node2.Data;
-        node2.Data = temp;
-    }
-    public void Sort()
-    {
-        sortAlgorithm.Sort(this);
+        node2.Data = tempData;
     }
 }

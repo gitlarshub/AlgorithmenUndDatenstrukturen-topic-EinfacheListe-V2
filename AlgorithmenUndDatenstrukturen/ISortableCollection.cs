@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlgorithmenUndDatenstrukturen
+namespace CommonDLL
 {
-    public interface ISortStragegy<T>
+    public interface ISortableCollection<T> where T : IComparable<T>
     {
-        void Sort(Node<T> head);
+        int Count();
+        T Get(int index);
+        void Swap(int index1, int index2);
     }
 }

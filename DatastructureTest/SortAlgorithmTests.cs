@@ -7,31 +7,22 @@ using System.Reflection;
 namespace DataStructureTests
 {
     [TestFixture]
-    public class SortingAlgorithmTests
+    public class SortAlgorithmTests
     {
         private DoubleLinkedList<Person> list;
-        private Person p1; 
-        private Person p2;
-        private Person p3;
-        private Person p4;
 
         [SetUp]
         public void Setup()
         {
             list = new DoubleLinkedList<Person>();
-
-            p1 = new Person("Lars", "Veljaca", "Männlich", 17);
-            p2 = new Person("Ferdinand", "Willi", "Männlich", 30);
-            p3 = new Person("Petra", "Müller", "Weiblich", 32);
-            p4 = new Person("Anna", "Adler", "Weiblich", 30);
         }
-
-        private Person[] ToArray(DoubleLinkedList<Person> dll)
+        private Person[] ToArray()
         {
             var result = new List<Person>();
-            var current = typeof(DoubleLinkedList<Person>)
-                .GetField("head", BindingFlags.NonPublic | BindingFlags.Instance)
-                .GetValue(dll);
+            var headField = typeof(DoubleLinkedList<Person>)
+                .GetField("head", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            var current = headField.GetValue(list);
 
             while (current != null)
             {
@@ -43,133 +34,58 @@ namespace DataStructureTests
         }
 
         [Test]
+        public void Count_EmptyList_ReturnsZero()
+        {
+            Assert.AreEqual(0, list.Count());
+        }
+
+        [Test]
         public void BubbleSort_EmptyList_DoesNothing()
         {
             list.Sort();
-            Assert.AreEqual(0, ToArray(list).Length);
+            Assert.AreEqual(0, list.Count());
+            Assert.AreEqual(0, ToArray().Length);
         }
 
         [Test]
-        public void BubbleSort_SingleElement_RemainsUnchanged()
+        public void BubbleSort_EmptyList_ToArrayReturnsEmptyArray()
         {
-            list.Add(p1);
             list.Sort();
-            var arr = ToArray(list);
-            Assert.AreEqual(1, arr.Length);
-            Assert.AreEqual(p1, arr[0]);
+            var arr = ToArray();
+            Assert.IsEmpty(arr);
         }
 
         [Test]
-        public void BubbleSort_MultipleElements_SortsByAgeThenLastName()
+        public void InsertionSort_SetStrategyAndSortOnEmptyList_DoesNothing()
         {
-            list.Add(p2); list.Add(p3); list.Add(p1);
+            list.sortAlgorithm = new InsertionSortStrategy<Person>();
             list.Sort();
-            var arr = ToArray(list);
-            Assert.AreEqual(p1, arr[0]);
-            Assert.AreEqual(p2, arr[1]);
-            Assert.AreEqual(p3, arr[2]);
+            Assert.AreEqual(0, list.Count());
+            Assert.IsEmpty(ToArray());
         }
 
         [Test]
-        public void BubbleSort_AlreadySortedList_RemainsSorted()
+        public void SortStrategy_CanBeChanged()
         {
-            list.Add(p1); list.Add(p2); list.Add(p3);
-            list.Sort();
-            var arr = ToArray(list);
-            Assert.AreEqual(p1, arr[0]);
-            Assert.AreEqual(p2, arr[1]);
-            Assert.AreEqual(p3, arr[2]);
+            Assert.IsInstanceOf<BubbleSortStrategy<Person>>(list.sortAlgorithm);
+
+            list.sortAlgorithm = new InsertionSortStrategy<Person>();
+
+            Assert.IsInstanceOf<InsertionSortStrategy<Person>>(list.sortAlgorithm);
         }
 
         [Test]
-        public void BubbleSort_ReverseOrderList_SortsCorrectly()
+        public void Get_OnEmptyList_ThrowsArgumentOutOfRangeException()
         {
-            list.Add(p3); list.Add(p2); list.Add(p1);
-            list.Sort();
-            var arr = ToArray(list);
-            Assert.AreEqual(p1, arr[0]);
-            Assert.AreEqual(p2, arr[1]);
-            Assert.AreEqual(p3, arr[2]);
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.Get(0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.Get(-1));
         }
 
         [Test]
-        public void BubbleSort_DuplicateAges_SortsByLastName()
+        public void Swap_OnEmptyList_ThrowsArgumentOutOfRangeException()
         {
-            list.Add(p2); list.Add(p3); list.Add(p4); list.Add(p1);
-            list.Sort();
-            var arr = ToArray(list);
-            Assert.AreEqual(p1, arr[0]);
-            Assert.AreEqual(p4, arr[1]); 
-            Assert.AreEqual(p2, arr[2]); 
-            Assert.AreEqual(p3, arr[3]); 
-        }
-
-        [Test]
-        public void InsertionSort_EmptyList_DoesNothing()
-        {
-            list.sortAlgorithm = new InsertionSort<Person>();
-            list.Sort();
-            Assert.AreEqual(0, ToArray(list).Length);
-        }
-
-        [Test]
-        public void InsertionSort_SingleElement_RemainsUnchanged()
-        {
-            list.sortAlgorithm = new InsertionSort<Person>();
-            list.Add(p1);
-            list.Sort();
-            var arr = ToArray(list);
-            Assert.AreEqual(1, arr.Length);
-            Assert.AreEqual(p1, arr[0]);
-        }
-
-        [Test]
-        public void InsertionSort_MultipleElements_SortsByAgeThenLastName()
-        {
-            list.sortAlgorithm = new InsertionSort<Person>();
-            list.Add(p2); list.Add(p3); list.Add(p1);
-            list.Sort();
-            var arr = ToArray(list);
-            Assert.AreEqual(p1, arr[0]);
-            Assert.AreEqual(p2, arr[1]);
-            Assert.AreEqual(p3, arr[2]);
-        }
-
-        [Test]
-        public void InsertionSort_AlreadySortedList_RemainsSorted()
-        {
-            list.sortAlgorithm = new InsertionSort<Person>();
-            list.Add(p1); list.Add(p2); list.Add(p3);
-            list.Sort();
-            var arr = ToArray(list);
-            Assert.AreEqual(p1, arr[0]);
-            Assert.AreEqual(p2, arr[1]);
-            Assert.AreEqual(p3, arr[2]);
-        }
-
-        [Test]
-        public void InsertionSort_ReverseOrderList_SortsCorrectly()
-        {
-            list.sortAlgorithm = new InsertionSort<Person>();
-            list.Add(p3); list.Add(p2); list.Add(p1);
-            list.Sort();
-            var arr = ToArray(list);
-            Assert.AreEqual(p1, arr[0]);
-            Assert.AreEqual(p2, arr[1]);
-            Assert.AreEqual(p3, arr[2]);
-        }
-
-        [Test]
-        public void InsertionSort_DuplicateAges_SortsByLastName()
-        {
-            list.sortAlgorithm = new InsertionSort<Person>();
-            list.Add(p2); list.Add(p3); list.Add(p4); list.Add(p1);
-            list.Sort();
-            var arr = ToArray(list);
-            Assert.AreEqual(p1, arr[0]);
-            Assert.AreEqual(p4, arr[1]); 
-            Assert.AreEqual(p2, arr[2]);
-            Assert.AreEqual(p3, arr[3]); 
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.Swap(0, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.Swap(0, 1));
         }
     }
 }

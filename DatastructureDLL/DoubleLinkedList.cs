@@ -1,117 +1,74 @@
-﻿using AlgorithmenUndDatenstrukturen;
+﻿using CommonDLL;
 using SortingAlgorithms;
 using System;
 
-public class DoubleLinkedList<T> where T : IComparable<T>
+public class DoubleLinkedList<T> : ISortableCollection<T> where T : IComparable<T>
 {
     private Node<T> head;
     private Node<T> tail;
-    public ISortStragegy<T> sortAlgorithm;
+    public ISortStrategy<T> sortAlgorithm;
 
     public DoubleLinkedList()
     {
         head = null;
         tail = null;
-        sortAlgorithm = new BubbleSort<T>();
+        sortAlgorithm = new BubbleSortStrategy<T>();
     }
 
-    public void Add(T data)
+    public int Count()
     {
-        Node<T> newNode = new Node<T>(data);
-        if (head == null)
-        {
-            head = newNode;
-            tail = newNode;
-        }
-        else
-        {
-            tail.Next = newNode;
-            newNode.Previous = tail;
-            tail = newNode;
-        }
-    }
-
-    public bool Contains(T data)
-    {
+        int count = 0;
         Node<T> current = head;
         while (current != null)
         {
-            if (current.Data.Equals(data))
-            {
-                return true;
-            }
+            count++;
             current = current.Next;
         }
-        return false;
+        return count;
     }
 
-    public void InsertBefore(T elementAfter, T elementToInsert)
+    public T Get(int index)
     {
-        Node<T> newNode = new Node<T>(elementToInsert);
+        if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
+
         Node<T> current = head;
-        while (current != null)
+        for (int i = 0; i <= index; i++)
         {
-            if (current.Data.Equals(elementAfter))
-            {
-                newNode.Next = current;
-                newNode.Previous = current.Previous;
-                if (current.Previous != null)
-                {
-                    current.Previous.Next = newNode;
-                }
-                else
-                {
-                    head = newNode;
-                }
-                current.Previous = newNode;
-                return;
-            }
+            if (current == null)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            if (i == index) break;
             current = current.Next;
         }
+
+        return current.Data;
     }
 
-    public void InsertAfter(T elementBefore, T elementToInsert)
+    public void Swap(int index1, int index2)
     {
-        Node<T> newNode = new Node<T>(elementToInsert);
-        Node<T> current = head;
-        while (current != null)
+        if (index1 == index2) return;
+        if (index1 > index2)
         {
-            if (current.Data.Equals(elementBefore))
-            {
-                newNode.Next = current.Next;
-                newNode.Previous = current;
-                if (current.Next != null)
-                {
-                    current.Next.Previous = newNode;
-                }
-                else
-                {
-                    tail = newNode;
-                }
-                current.Next = newNode;
-                return;
-            }
-            current = current.Next;
+            int tempIndex = index1;
+            index1 = index2;
+            index2 = tempIndex;
         }
+        Node<T> node1 = head;
+        for (int i = 0; i < index1; i++)
+        {
+            node1 = node1.Next;
+        }
+        Node<T> node2 = node1;
+        for (int i = index1; i < index2; i++)
+        {
+            node2 = node2.Next;
+        }
+        if (node1 == null || node2 == null) throw new ArgumentOutOfRangeException();
+        T temp = node1.Data;
+        node1.Data = node2.Data;
+        node2.Data = temp;
     }
-
-    public int PosOfElement(T element)
+    public void Sort()
     {
-        Node<T> current = head;
-        int position = 0;
-        while (current != null)
-        {
-            if (current.Data.Equals(element))
-            {
-                return position;
-            }
-            current = current.Next;
-            position++;
-        }
-        return -1;
-    }
-    public void Sort() 
-    { 
-        sortAlgorithm.Sort(head);
+        sortAlgorithm.Sort(this);
     }
 }

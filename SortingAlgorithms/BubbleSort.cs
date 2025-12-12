@@ -1,4 +1,4 @@
-﻿using AlgorithmenUndDatenstrukturen;
+﻿using CommonDLL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,31 +7,24 @@ using System.Threading.Tasks;
 
 namespace SortingAlgorithms
 {
-    public class BubbleSort<T> : ISortStragegy<T> where T : IComparable<T>
+    public class BubbleSortStrategy<T> : ISortStrategy<T> where T : IComparable<T>
     {
-        public void Sort(Node<T> head)
+        public void Sort(ISortableCollection<T> c)
         {
-            if (head == null || head.Next == null)
-                return;
-
+            int count = c.Count();
             bool swapped;
             do
             {
                 swapped = false;
-                Node<T> current = head;
-                while (current.Next != null)
+                for (int i = 0; i < count - 1; i++)
                 {
-                    if (current.Data.CompareTo(current.Next.Data) > 0)
+                    if (c.Get(i).CompareTo(c.Get(i + 1)) > 0)
                     {
-                        T temp = current.Data;
-                        current.Data = current.Next.Data;
-                        current.Next.Data = temp;
+                        c.Swap(i, i + 1);
                         swapped = true;
                     }
-                    current = current.Next;
                 }
             } while (swapped);
         }
     }
 }
-
