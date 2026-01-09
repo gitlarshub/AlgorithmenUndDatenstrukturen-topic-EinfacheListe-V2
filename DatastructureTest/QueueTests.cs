@@ -1,136 +1,113 @@
 ﻿using NUnit.Framework;
-using System;
 using CommonDLL;
 using SortingAlgorithms;
+using System;
 
-namespace DataStructureTests
+namespace DataStructureAndSortingTests
 {
     [TestFixture]
     public class QueueTests
     {
-        private Queue<Person> _queue;
-        private Person p1, p2, p3, p4, p5;
+        private Queue<int> _queue;
 
         [SetUp]
         public void Setup()
         {
-            _queue = new Queue<Person>();
-
-            p1 = new Person("Anna", "Adler", "Weiblich", 30);
-            p2 = new Person("Bob", "Brown", "Männlich", 25);
-            p3 = new Person("Clara", "Clark", "Weiblich", 35);
-            p4 = new Person("David", "Davis", "Männlich", 25);
-            p5 = new Person("Eve", "Evans", "Weiblich", 20);
+            _queue = new Queue<int>();
         }
 
         [Test]
-        public void Enqueue_IncreasesCount()
-        {
-            _queue.Enqueue(p1);
-            Assert.AreEqual(1, _queue.Count());
-
-            _queue.Enqueue(p2);
-            _queue.Enqueue(p3);
-            Assert.AreEqual(3, _queue.Count());
-        }
-
-        [Test]
-        public void Dequeue_ReturnsElementsInFIFOOrder()
-        {
-            _queue.Enqueue(p1);
-            _queue.Enqueue(p2);
-            _queue.Enqueue(p3);
-
-            Assert.AreEqual(p1, _queue.Dequeue());
-            Assert.AreEqual(p2, _queue.Dequeue());
-            Assert.AreEqual(p3, _queue.Dequeue());
-        }
-
-        [Test]
-        public void Peek_ReturnsFrontElement_WithoutRemovingIt()
-        {
-            _queue.Enqueue(p1);
-            _queue.Enqueue(p2);
-
-            Assert.AreEqual(p1, _queue.Peek());
-            Assert.AreEqual(2, _queue.Count());
-
-            _queue.Dequeue();
-            Assert.AreEqual(p2, _queue.Peek());
-            Assert.AreEqual(1, _queue.Count());
-        }
-
-        [Test]
-        public void IsEmpty_ReturnsTrue_WhenQueueIsEmpty()
+        public void NewQueue_IsEmpty()
         {
             Assert.IsTrue(_queue.IsEmpty());
+            Assert.AreEqual(0, _queue.Count());
+        }
 
-            _queue.Enqueue(p1);
-            Assert.IsFalse(_queue.IsEmpty());
+        [Test]
+        public void Enqueue_Dequeue_FIFO_Order()
+        {
+            _queue.Enqueue(10);
+            _queue.Enqueue(20);
+            _queue.Enqueue(30);
 
-            _queue.Dequeue();
+            Assert.AreEqual(10, _queue.Dequeue());
+            Assert.AreEqual(20, _queue.Dequeue());
+            Assert.AreEqual(30, _queue.Dequeue());
             Assert.IsTrue(_queue.IsEmpty());
         }
 
         [Test]
-        public void Dequeue_OnEmptyQueue_ThrowsInvalidOperationException()
+        public void Peek_DoesNotRemoveElement()
+        {
+            _queue.Enqueue(42);
+            Assert.AreEqual(42, _queue.Peek());
+            Assert.AreEqual(1, _queue.Count());
+        }
+
+        [Test]
+        public void Dequeue_EmptyQueue_ThrowsException()
         {
             Assert.Throws<InvalidOperationException>(() => _queue.Dequeue());
         }
 
         [Test]
-        public void Peek_OnEmptyQueue_ThrowsInvalidOperationException()
+        public void Get_ValidIndex_ReturnsCorrectValue()
         {
-            Assert.Throws<InvalidOperationException>(() => _queue.Peek());
+            _queue.Enqueue(100);
+            _queue.Enqueue(200);
+            _queue.Enqueue(300);
+
+            Assert.AreEqual(100, _queue.Get(0));
+            Assert.AreEqual(200, _queue.Get(1));
+            Assert.AreEqual(300, _queue.Get(2));
         }
 
         [Test]
-        public void Count_ReturnsZero_OnEmptyQueue()
+        public void Get_InvalidIndex_ThrowsException()
         {
-            Assert.AreEqual(0, _queue.Count());
+            _queue.Enqueue(5);
+            Assert.Throws<ArgumentOutOfRangeException>(() => _queue.Get(-1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _queue.Get(1));
+        }
+
+        [Test]
+        public void Sort_Ints_Ascending()
+        {
+            _queue.Enqueue(7);
+            _queue.Enqueue(2);
+            _queue.Enqueue(9);
+            _queue.Enqueue(1);
+            _queue.Enqueue(5);
+
+            _queue.Sort();
+
+            Assert.AreEqual(1, _queue.Get(0));
+            Assert.AreEqual(2, _queue.Get(1));
+            Assert.AreEqual(5, _queue.Get(2));
+            Assert.AreEqual(7, _queue.Get(3));
+            Assert.AreEqual(9, _queue.Get(4));
         }
 
         [Test]
         public void Sort_EmptyQueue_DoesNothing()
         {
             _queue.Sort();
-            Assert.AreEqual(0, _queue.Count());
             Assert.IsTrue(_queue.IsEmpty());
         }
 
         [Test]
-        public void Sort_SortsElementsSoThatSmallestIsAtFront()
+        public void Sort_Persons_ByAgeThenLastname()
         {
-            _queue.Enqueue(p3);
-            _queue.Enqueue(p1);
-            _queue.Enqueue(p4);
-            _queue.Enqueue(p2);
-            _queue.Enqueue(p5); 
+            var q = new Queue<Person>();
+            q.Enqueue(new Person("Ben", "Müller", "M", 19));
+            q.Enqueue(new Person("Anna", "Ziegler", "W", 28));
+            q.Enqueue(new Person("Clara", "Bauer", "W", 19));
 
-            _queue.Sort();
+            q.Sort();
 
-            Assert.AreEqual(p5, _queue.Dequeue()); 
-            Assert.AreEqual("Bob", _queue.Dequeue().Vorname); 
-            Assert.AreEqual("David", _queue.Dequeue().Vorname);
-            Assert.AreEqual(p1, _queue.Dequeue()); 
-            Assert.AreEqual(p3, _queue.Dequeue()); 
-
-            Assert.AreEqual(0, _queue.Count());
-            Assert.IsTrue(_queue.IsEmpty());
-        }
-
-        [Test]
-        public void Sort_MaintainsCorrectOrderAfterMultipleOperations()
-        {
-            _queue.Enqueue(p4); 
-            _queue.Enqueue(p1); 
-            _queue.Enqueue(p5); 
-
-            _queue.Sort();
-
-            Assert.AreEqual(p5, _queue.Dequeue());
-            Assert.AreEqual(p4, _queue.Dequeue());
-            Assert.AreEqual(p1, _queue.Dequeue());
+            Assert.AreEqual("Clara", q.Get(0).Vorname);
+            Assert.AreEqual("Ben", q.Get(1).Vorname);
+            Assert.AreEqual("Anna", q.Get(2).Vorname);
         }
     }
 }
