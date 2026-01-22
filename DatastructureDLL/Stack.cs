@@ -59,7 +59,6 @@ public class Stack<T> : ISortableCollection<T> where T : IComparable<T>
     public T Get(int index)
     {
         if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-
         Node<T> current = top;  
         for (int i = 0; i <= index; i++) 
         {
