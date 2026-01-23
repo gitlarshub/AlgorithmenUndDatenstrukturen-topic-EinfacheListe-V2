@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace DataStructureAndSortingTest
 {
     [TestFixture]
-    public class QuickSortTests
+    public class BucketSortTests
     {
         private class TestCollection<T> : ISortableCollection<T> where T : IComparable<T>
         {
@@ -33,7 +33,7 @@ namespace DataStructureAndSortingTest
         }
 
         [Test]
-        public void QuickSort_SortsIntegersAscending()
+        public void BucketSort_SortsIntegersAscending()
         {
             var collection = new TestCollection<int>();
             collection.Add(5);
@@ -45,64 +45,37 @@ namespace DataStructureAndSortingTest
             collection.Add(6);
             collection.Add(4);
 
-            var sorter = new QuickSortStrategy<int>();
+            var sorter = new BucketSortStrategy<int>();
             sorter.Sort(collection);
 
             var sortedList = collection.ToList();
             CollectionAssert.AreEqual(new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 }, sortedList);
         }
 
-        [Test]
-        public void QuickSort_SortsPersonsByAgeThenLastName()
-        {
-            var collection = new TestCollection<Person>();
-            collection.Add(new Person("Alice", "Smith", "Female", 30));
-            collection.Add(new Person("Bob", "Johnson", "Male", 25));
-            collection.Add(new Person("Charlie", "Brown", "Male", 30));
-            collection.Add(new Person("David", "Williams", "Male", 25));
-            collection.Add(new Person("Eve", "Davis", "Female", 35));
-
-            var sorter = new QuickSortStrategy<Person>();
-            sorter.Sort(collection);
-
-            var sortedList = collection.ToList();
-            var expected = new List<Person>
-            {
-                new Person("Bob", "Johnson", "Male", 25),
-                new Person("David", "Williams", "Male", 25),
-                new Person("Charlie", "Brown", "Male", 30),
-                new Person("Alice", "Smith", "Female", 30),
-                new Person("Eve", "Davis", "Female", 35)
-            };
-
-            for (int i = 0; i < sortedList.Count; i++)
-            {
-                Assert.AreEqual(expected[i].Alter, sortedList[i].Alter);
-                Assert.AreEqual(expected[i].Nachname, sortedList[i].Nachname);
-            }
-        }
+        // BucketSort ist für numerische Werte gedacht, daher kein Test für Person, da Convert.ToDouble fehlschlagen würde.
+        // Falls benötigt, müsste BucketSort für nicht-numerische Typen angepasst werden (z.B. über eine Hash-Funktion).
 
         [Test]
-        public void QuickSort_HandlesEmptyCollection()
+        public void BucketSort_HandlesEmptyCollection()
         {
             var collection = new TestCollection<int>();
-            var sorter = new QuickSortStrategy<int>();
+            var sorter = new BucketSortStrategy<int>();
             Assert.DoesNotThrow(() => sorter.Sort(collection));
             CollectionAssert.IsEmpty(collection.ToList());
         }
 
         [Test]
-        public void QuickSort_HandlesSingleElement()
+        public void BucketSort_HandlesSingleElement()
         {
             var collection = new TestCollection<int>();
             collection.Add(42);
-            var sorter = new QuickSortStrategy<int>();
+            var sorter = new BucketSortStrategy<int>();
             sorter.Sort(collection);
             CollectionAssert.AreEqual(new List<int> { 42 }, collection.ToList());
         }
 
         [Test]
-        public void QuickSort_HandlesAlreadySorted()
+        public void BucketSort_HandlesAlreadySorted()
         {
             var collection = new TestCollection<int>();
             collection.Add(1);
@@ -110,14 +83,14 @@ namespace DataStructureAndSortingTest
             collection.Add(3);
             collection.Add(4);
 
-            var sorter = new QuickSortStrategy<int>();
+            var sorter = new BucketSortStrategy<int>();
             sorter.Sort(collection);
 
             CollectionAssert.AreEqual(new List<int> { 1, 2, 3, 4 }, collection.ToList());
         }
 
         [Test]
-        public void QuickSort_HandlesDuplicates()
+        public void BucketSort_HandlesDuplicates()
         {
             var collection = new TestCollection<int>();
             collection.Add(3);
@@ -126,10 +99,25 @@ namespace DataStructureAndSortingTest
             collection.Add(2);
             collection.Add(2);
 
-            var sorter = new QuickSortStrategy<int>();
+            var sorter = new BucketSortStrategy<int>();
             sorter.Sort(collection);
 
             CollectionAssert.AreEqual(new List<int> { 1, 2, 2, 3, 3 }, collection.ToList());
+        }
+
+        [Test]
+        public void BucketSort_HandlesAllEqual()
+        {
+            var collection = new TestCollection<int>();
+            collection.Add(5);
+            collection.Add(5);
+            collection.Add(5);
+            collection.Add(5);
+
+            var sorter = new BucketSortStrategy<int>();
+            sorter.Sort(collection);
+
+            CollectionAssert.AreEqual(new List<int> { 5, 5, 5, 5 }, collection.ToList());
         }
     }
 }
