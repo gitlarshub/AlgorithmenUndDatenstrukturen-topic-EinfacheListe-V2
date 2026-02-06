@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BucketSort.cs" />
+    <Compile Include="SortingStrategyFactory.cs" />
     <Compile Include="QuickSort.cs" />
     <Compile Include="InsertionSort.cs" />
     <Compile Include="BubbleSort.cs" />

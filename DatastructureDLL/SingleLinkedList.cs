@@ -6,11 +6,18 @@ public class SingleLinkedList<T> : ISortableCollection<T> where T : IComparable<
 {
     private Node<T> head;
     private ISortStrategy<T> sortAlgorithm;
+
     public SingleLinkedList()
     {
         head = null;
-        sortAlgorithm = new BubbleSortStrategy<T>();
+        sortAlgorithm = SortStrategyFactory.CreateDefault<T>();
     }
+
+    public void Sort()
+    {
+        sortAlgorithm.Sort(this);
+    }
+
     public int Count()
     {
         int count = 0;
@@ -26,15 +33,13 @@ public class SingleLinkedList<T> : ISortableCollection<T> where T : IComparable<
     public T Get(int index)
     {
         if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-
         Node<T> current = head;
-        for (int i = 0; i <= index; i++)  
+        for (int i = 0; i < index; i++)
         {
-            if (current == null)
-                throw new ArgumentOutOfRangeException(nameof(index));
-            if (i == index) break;
+            if (current == null) throw new ArgumentOutOfRangeException(nameof(index));
             current = current.Next;
         }
+        if (current == null) throw new ArgumentOutOfRangeException(nameof(index));
         return current.Data;
     }
 
@@ -61,9 +66,5 @@ public class SingleLinkedList<T> : ISortableCollection<T> where T : IComparable<
         T temp = node1.Data;
         node1.Data = node2.Data;
         node2.Data = temp;
-    }
-    public void Sort()
-    {
-        sortAlgorithm.Sort(this);
     }
 }

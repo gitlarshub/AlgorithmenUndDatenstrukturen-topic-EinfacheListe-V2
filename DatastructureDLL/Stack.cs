@@ -7,20 +7,20 @@ public class Stack<T> : ISortableCollection<T> where T : IComparable<T>
     private Node<T> top;
     private ISortStrategy<T> sortAlgorithm;
 
-    public Stack()
+    public Stack() 
     {
         top = null;
-        sortAlgorithm = new BubbleSortStrategy<T>();
+        sortAlgorithm = SortStrategyFactory.CreateDefault<T>(); 
     }
 
-    public void Push(T data)
+    public void Push(T data) 
     {
         Node<T> newNode = new Node<T>(data);
         newNode.Next = top;
         top = newNode;
     }
 
-    public T Pop()
+    public T Pop() 
     {
         if (top == null) throw new InvalidOperationException("Stack is empty");
         T data = top.Data;
@@ -39,12 +39,12 @@ public class Stack<T> : ISortableCollection<T> where T : IComparable<T>
         return top == null;
     }
 
-    public void Sort()
+    public void Sort() 
     {
         sortAlgorithm.Sort(this);
     }
 
-    public int Count()
+    public int Count() 
     {
         int count = 0;
         Node<T> current = top;
@@ -59,14 +59,13 @@ public class Stack<T> : ISortableCollection<T> where T : IComparable<T>
     public T Get(int index)
     {
         if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-        Node<T> current = top;  
-        for (int i = 0; i <= index; i++) 
+        Node<T> current = top;
+        for (int i = 0; i < index; i++)
         {
-            if (current == null)
-                throw new ArgumentOutOfRangeException(nameof(index));
-            if (i == index) break;
+            if (current == null) throw new ArgumentOutOfRangeException(nameof(index));
             current = current.Next;
         }
+        if (current == null) throw new ArgumentOutOfRangeException(nameof(index));
         return current.Data;
     }
 
@@ -89,6 +88,7 @@ public class Stack<T> : ISortableCollection<T> where T : IComparable<T>
         {
             node2 = node2.Next;
         }
+
         if (node1 == null || node2 == null) throw new ArgumentOutOfRangeException();
         T tempData = node1.Data;
         node1.Data = node2.Data;

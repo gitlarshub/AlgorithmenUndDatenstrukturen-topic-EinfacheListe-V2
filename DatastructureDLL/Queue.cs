@@ -1,14 +1,10 @@
 ﻿using CommonDLL;
-
 using SortingAlgorithms;
-
 using System;
 
-namespace DataStructureAndSortingTests
-
+namespace DataStructureDLL
 {
     public class Queue<T> : ISortableCollection<T> where T : IComparable<T>
-
     {
         private Node<T> front;
         private Node<T> rear;
@@ -18,24 +14,22 @@ namespace DataStructureAndSortingTests
         {
             front = null;
             rear = null;
-            sortAlgorithm = new BubbleSortStrategy<T>();
+            sortAlgorithm = SortStrategyFactory.CreateDefault<T>();
         }
 
-        public void Enqueue(T data)
+        public void Enqueue(T data) 
         {
             Node<T> newNode = new Node<T>(data);
-
             if (rear == null)
             {
                 front = rear = newNode;
                 return;
             }
-
             rear.Next = newNode;
             rear = newNode;
         }
 
-        public T Dequeue()
+        public T Dequeue() 
         {
             if (front == null) throw new InvalidOperationException("Queue is empty");
             T data = front.Data;
@@ -44,13 +38,14 @@ namespace DataStructureAndSortingTests
                 rear = null;
             return data;
         }
+
         public T Peek()
         {
             if (front == null) throw new InvalidOperationException("Queue is empty");
             return front.Data;
         }
 
-        public bool IsEmpty()
+        public bool IsEmpty() 
         {
             return front == null;
         }
@@ -60,7 +55,7 @@ namespace DataStructureAndSortingTests
             sortAlgorithm.Sort(this);
         }
 
-        public int Count()
+        public int Count() 
         {
             int count = 0;
             Node<T> current = front;
@@ -111,4 +106,3 @@ namespace DataStructureAndSortingTests
         }
     }
 }
-

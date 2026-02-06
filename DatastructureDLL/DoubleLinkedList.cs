@@ -6,13 +6,18 @@ public class DoubleLinkedList<T> : ISortableCollection<T> where T : IComparable<
 {
     private Node<T> head;
     private Node<T> tail;
-    public ISortStrategy<T> sortAlgorithm;
+    private ISortStrategy<T> sortAlgorithm;
 
     public DoubleLinkedList()
     {
         head = null;
         tail = null;
-        sortAlgorithm = new BubbleSortStrategy<T>();
+        sortAlgorithm = SortStrategyFactory.CreateDefault<T>();
+    }
+
+    public void Sort()
+    {
+        sortAlgorithm.Sort(this);
     }
 
     public int Count()
@@ -30,16 +35,13 @@ public class DoubleLinkedList<T> : ISortableCollection<T> where T : IComparable<
     public T Get(int index)
     {
         if (index < 0) throw new ArgumentOutOfRangeException(nameof(index));
-
         Node<T> current = head;
-        for (int i = 0; i <= index; i++)
+        for (int i = 0; i < index; i++)
         {
-            if (current == null)
-                throw new ArgumentOutOfRangeException(nameof(index));
-            if (i == index) break;
+            if (current == null) throw new ArgumentOutOfRangeException(nameof(index));
             current = current.Next;
         }
-
+        if (current == null) throw new ArgumentOutOfRangeException(nameof(index));
         return current.Data;
     }
 
@@ -66,9 +68,5 @@ public class DoubleLinkedList<T> : ISortableCollection<T> where T : IComparable<
         T temp = node1.Data;
         node1.Data = node2.Data;
         node2.Data = temp;
-    }
-    public void Sort()
-    {
-        sortAlgorithm.Sort(this);
     }
 }
